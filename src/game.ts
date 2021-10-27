@@ -20,7 +20,7 @@ export class Game extends Phaser.Scene {
   }
 
   public preload() {
-    this.load.setBaseURL('../assets');
+    this.load.setBaseURL('assets');
     this.load.image('circle_blue', 'circle_blue.png');
     this.load.image('circle_green', 'circle_green.png');
     this.load.image('square', 'square10x.png');
