@@ -17,11 +17,7 @@ class Main extends Phaser.Game {
 
     this.scene.add(Game.KEY, Game, false);
     this.scene.add(GameOver.KEY, GameOver, false);
-    if (window.location.hash === `#${GameOver.KEY}`) {
-      this.scene.start(GameOver.KEY);
-    } else {
-      this.scene.start(Game.KEY);
-    }
+    this.scene.start(Game.KEY);
   }
 }
 

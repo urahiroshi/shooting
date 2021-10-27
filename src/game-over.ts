@@ -5,7 +5,6 @@ export class GameOver extends Phaser.Scene {
   private spaceKey: Phaser.Input.Keyboard.Key;
 
   public init() {
-    window.location.hash = GameOver.KEY;
   }
 
   public preload() {
