@@ -1,5 +1,6 @@
 import * as Phaser from "phaser";
 import { Game } from "./game";
+import { GameOver } from "./game-over";
 
 class Main extends Phaser.Game {
   constructor() {
@@ -14,8 +15,13 @@ class Main extends Phaser.Game {
     };
     super(config);
 
-    this.scene.add("game", Game, false);
-    this.scene.start("game");
+    this.scene.add(Game.KEY, Game, false);
+    this.scene.add(GameOver.KEY, GameOver, false);
+    if (window.location.hash === `#${GameOver.KEY}`) {
+      this.scene.start(GameOver.KEY);
+    } else {
+      this.scene.start(Game.KEY);
+    }
   }
 }
 

@@ -9,12 +9,16 @@ const gameOver = () => {
   }
 }
 export class Game extends Phaser.Scene {
+  static KEY = 'game';
+
   private balls: Phaser.Physics.Arcade.Group;
   private player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   private rectangle: Phaser.Geom.Rectangle;
   private cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
 
-  public init() { }
+  public init() {
+    window.location.hash = Game.KEY;
+  }
 
   public preload() {
     this.load.setBaseURL('assets');
@@ -49,13 +53,17 @@ export class Game extends Phaser.Scene {
           const circle = this.physics.add.sprite(randomPoint.x, randomPoint.y, 'circle_blue');
           const angle = Math.PI * (i / (length - 1));
           circle.setVelocity(Math.cos(angle) * 150, Math.sin(angle) * 150);
-          this.physics.add.collider(this.player, circle, gameOver);
+          this.physics.add.collider(this.player, circle, this.gameOver.bind(this));
         }
       },
       callbackScope: this,
       delay: 1000,
       loop: true,
     });
+  }
+
+  private gameOver() {
+    this.scene.start('game-over');
   }
 
   public create() {
@@ -71,7 +79,7 @@ export class Game extends Phaser.Scene {
     this.createCircleShots();
 
     // it should be called after addEvent
-    this.physics.add.collider(this.player, this.balls, gameOver);
+    this.physics.add.collider(this.player, this.balls, this.gameOver.bind(this));
   }
 
   public update() {
