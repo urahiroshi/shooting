@@ -10,14 +10,22 @@ const gameOver = () => {
 }
 export class Game extends Phaser.Scene {
   static KEY = 'game';
-
+  
   private balls: Phaser.Physics.Arcade.Group;
   private player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   private rectangle: Phaser.Geom.Rectangle;
   private cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
+  private timerText: Phaser.GameObjects.Text;
+  private startTime: number;
+  private clearTime: number;
+  private cleared: boolean;
+  private timerEvents: Phaser.Time.TimerEvent[];
 
   public init() {
     window.location.hash = Game.KEY;
+    this.clearTime = 30;
+    this.cleared = false;
+    this.timerEvents = [];
   }
 
   public preload() {
@@ -33,7 +41,7 @@ export class Game extends Phaser.Scene {
       velocityY: 100,
     });
 
-    this.time.addEvent({
+    this.timerEvents.push(this.time.addEvent({
       callback: () => {
         const randomPoint = this.rectangle.getRandomPoint();
         this.balls.create(randomPoint.x, randomPoint.y, 'circle_green');
@@ -41,11 +49,11 @@ export class Game extends Phaser.Scene {
       callbackScope: this,
       delay: 100,
       loop: true,
-    });
+    }));
   }
 
   private createCircleShots() {
-    this.time.addEvent({
+    this.timerEvents.push(this.time.addEvent({
       callback: () => {
         const randomPoint = this.rectangle.getRandomPoint();
         const length = 7;
@@ -59,11 +67,16 @@ export class Game extends Phaser.Scene {
       callbackScope: this,
       delay: 1000,
       loop: true,
-    });
+    }));
   }
 
   private gameOver() {
     this.scene.start('game-over');
+  }
+
+  private createTimer(width: number) {
+    this.timerText = this.add.text(width - 60, 20, String(this.clearTime), { fontFamily: 'sans-serif', fontSize: '32px' });
+    this.startTime = Date.now();
   }
 
   public create() {
@@ -78,11 +91,23 @@ export class Game extends Phaser.Scene {
     this.createStraightShots();
     this.createCircleShots();
 
+    this.createTimer(width);
+
     // it should be called after addEvent
     this.physics.add.collider(this.player, this.balls, this.gameOver.bind(this));
   }
 
+  private updateTimer() {
+    const elapsedTime = Date.now() - this.startTime;
+    const remainingTime = Math.trunc(this.clearTime - (elapsedTime / 1000));
+    const displayTime = remainingTime > 0 ? String(remainingTime) : '0';
+    this.timerText.setText(displayTime);
+    return remainingTime;
+  }
+
   public update() {
+    if (this.cleared) { return; }
+
     if (this.cursorKeys.left.isDown) {
       this.player.x -= 2;
     } else if (this.cursorKeys.right.isDown) {
@@ -93,5 +118,20 @@ export class Game extends Phaser.Scene {
     } else if (this.cursorKeys.down.isDown) {
       this.player.y += 2;
     }
+
+    const remainingTime = this.updateTimer();
+    if (remainingTime <= 0) {
+      this.clear();
+    }
+  }
+
+  private clear() {
+    this.cleared = true;
+    this.timerEvents.forEach((timerEvent) => {
+      timerEvent.destroy();
+    });
+    this.physics.pause();
+    const { height } = this.sys.game.canvas;
+    this.add.text(20, (height / 2) - 20, 'CLEAR!!', { fontFamily: 'sans-serif', fontSize: '40px' });
   }
 }
