@@ -1,5 +1,5 @@
 import * as Phaser from "phaser";
-import { Game } from "./game";
+import { Level1 } from "./level1";
 import { GameOver } from "./game-over";
 
 class Main extends Phaser.Game {
@@ -15,9 +15,9 @@ class Main extends Phaser.Game {
     };
     super(config);
 
-    this.scene.add(Game.KEY, Game, false);
+    this.scene.add(Level1.KEY, Level1, false);
     this.scene.add(GameOver.KEY, GameOver, false);
-    this.scene.start(Game.KEY);
+    this.scene.start(Level1.KEY);
   }
 }
 

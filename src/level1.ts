@@ -1,15 +1,7 @@
 import * as Phaser from "phaser"
 
-let isGameOver = false;
-const gameOver = () => {
-  if (!isGameOver) {
-    isGameOver = true;
-    alert('game over');
-    location.reload();
-  }
-}
-export class Game extends Phaser.Scene {
-  static KEY = 'game';
+export class Level1 extends Phaser.Scene {
+  static KEY = 'level1';
   
   private balls: Phaser.Physics.Arcade.Group;
   private player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -22,7 +14,7 @@ export class Game extends Phaser.Scene {
   private timerEvents: Phaser.Time.TimerEvent[];
 
   public init() {
-    window.location.hash = Game.KEY;
+    window.location.hash = Level1.KEY;
     this.clearTime = 30;
     this.cleared = false;
     this.timerEvents = [];
@@ -75,8 +67,12 @@ export class Game extends Phaser.Scene {
   }
 
   private createTimer(width: number) {
-    this.timerText = this.add.text(width - 60, 20, String(this.clearTime), { fontFamily: 'sans-serif', fontSize: '32px' });
+    this.timerText = this.add.text(width - 55, 10, String(this.clearTime), { fontFamily: 'sans-serif', fontSize: '32px' });
     this.startTime = Date.now();
+  }
+
+  private showLevelText() {
+    this.add.text(10, 10, "Level 1", { fontFamily: 'sans-serif', fontSize: '16px' });
   }
 
   public create() {
@@ -92,6 +88,7 @@ export class Game extends Phaser.Scene {
     this.createCircleShots();
 
     this.createTimer(width);
+    this.showLevelText();
 
     // it should be called after addEvent
     this.physics.add.collider(this.player, this.balls, this.gameOver.bind(this));

@@ -19,7 +19,7 @@ export class GameOver extends Phaser.Scene {
 
   public update() {
     if (this.spaceKey.isDown) { 
-      this.scene.start('game');
+      this.scene.start(window.location.hash.replace('#', ''));
     }
   }
 }
