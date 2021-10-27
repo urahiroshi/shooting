@@ -4,7 +4,7 @@
   "description": "",
   "main": "./dist/main.js",
   "scripts": {
-    "dev": "NODE_ENV=development webpack --watch & live-server --port=8080 --watch=src,images,audios,dist_client",
+    "dev": "NODE_ENV=development webpack --watch & live-server --open=public --port=8080 --watch=src,public",
     "build": "NODE_ENV=production webpack"
   },
   "author": "",
