@@ -18,38 +18,27 @@ export class Level2 extends LevelBase {
     this.load.image('square', 'square10x.png');
   }
 
-  private createStraightShots() {
-    this.balls = this.physics.add.group({
-      velocityX: 0,
-      velocityY: 100,
-    });
+  private createHanabiShots() {
+    const { width } = this.sys.game.canvas;
+    const firstShot = this.physics.add.sprite(width / 2, 0, 'circle_blue');
+    firstShot.setVelocity(0, 100);
+    this.physics.add.collider(this.player, firstShot, this.gameOver.bind(this));
 
     this.timerEvents.push(this.time.addEvent({
       callback: () => {
-        const randomPoint = this.rectangle.getRandomPoint();
-        this.balls.create(randomPoint.x, randomPoint.y, 'circle_green');
-      },
-      callbackScope: this,
-      delay: 100,
-      loop: true,
-    }));
-  }
-
-  private createCircleShots() {
-    this.timerEvents.push(this.time.addEvent({
-      callback: () => {
-        const randomPoint = this.rectangle.getRandomPoint();
-        const length = 7;
+        const { x, y } = firstShot;
+        firstShot.destroy();
+        const length = 16; // 4 + (3 * 4)
         for (let i=0; i<length; i++) {
-          const circle = this.physics.add.sprite(randomPoint.x, randomPoint.y, 'circle_blue');
-          const angle = Math.PI * (i / (length - 1));
-          circle.setVelocity(Math.cos(angle) * 150, Math.sin(angle) * 150);
-          this.physics.add.collider(this.player, circle, this.gameOver.bind(this));
+          const spark = this.physics.add.sprite(x, y, 'circle_blue');
+          const angle = 2 * Math.PI * (i / (length - 1));
+          spark.setVelocity(Math.cos(angle) * 150, Math.sin(angle) * 150);
+          this.physics.add.collider(this.player, spark, this.gameOver.bind(this));
         }
       },
       callbackScope: this,
-      delay: 1000,
-      loop: true,
+      delay: 3000,
+      loop: false,
     }));
   }
 
@@ -58,8 +47,7 @@ export class Level2 extends LevelBase {
     const { width } = this.sys.game.canvas;
     this.rectangle = new Phaser.Geom.Rectangle(0, 0, width, 0);
 
-    this.createStraightShots();
-    this.createCircleShots();
+    this.createHanabiShots();
 
     // it should be called after addEvent
     this.physics.add.collider(this.player, this.balls, this.gameOver.bind(this));
