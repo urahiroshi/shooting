@@ -1,7 +1,7 @@
 import * as Phaser from "phaser"
 
-export class Level1 extends Phaser.Scene {
-  static KEY = 'level1';
+export class Level2 extends Phaser.Scene {
+  static KEY = 'level2';
   
   private balls: Phaser.Physics.Arcade.Group;
   private player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -12,10 +12,9 @@ export class Level1 extends Phaser.Scene {
   private clearTime: number;
   private cleared: boolean;
   private timerEvents: Phaser.Time.TimerEvent[];
-  private spaceKey: Phaser.Input.Keyboard.Key;
 
   public init() {
-    window.location.hash = Level1.KEY;
+    window.location.hash = Level2.KEY;
     this.clearTime = 30;
     this.cleared = false;
     this.timerEvents = [];
@@ -73,7 +72,7 @@ export class Level1 extends Phaser.Scene {
   }
 
   private showLevelText() {
-    this.add.text(10, 10, "Level 1", { fontFamily: 'sans-serif', fontSize: '16px' });
+    this.add.text(10, 10, "Level 2", { fontFamily: 'sans-serif', fontSize: '16px' });
   }
 
   public create() {
@@ -104,12 +103,7 @@ export class Level1 extends Phaser.Scene {
   }
 
   public update() {
-    if (this.cleared) {
-      if (this.spaceKey.isDown) { 
-        this.scene.start('level2');
-      }
-      return;
-    }
+    if (this.cleared) { return; }
 
     if (this.cursorKeys.left.isDown) {
       this.player.x -= 2;
@@ -135,8 +129,6 @@ export class Level1 extends Phaser.Scene {
     });
     this.physics.pause();
     const { height } = this.sys.game.canvas;
-    this.add.text(10, height / 2 - 24, 'CLEAR!!', { fontFamily: 'sans-serif', fontSize: '48px' });
-    this.add.text(10, (height / 2) + 24, 'Please click space key to move next stage', { fontFamily: 'sans-serif', fontSize: '24px' });
-    this.spaceKey = this.input.keyboard.addKey('SPACE');
+    this.add.text(20, (height / 2) - 20, 'CLEAR!!', { fontFamily: 'sans-serif', fontSize: '40px' });
   }
 }
