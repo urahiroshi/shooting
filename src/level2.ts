@@ -13,14 +13,23 @@ export class Level2 extends LevelBase {
 
   public preload() {
     this._preload();
-    this.load.image('circle_blue', 'circle_blue.png');
-    this.load.image('circle_green', 'circle_green.png');
     this.load.image('square', 'square10x.png');
+
+    const shotCanvas = this.textures.createCanvas('shot', 10, 10);
+    const shotCtx = shotCanvas.context;
+    shotCtx.fillStyle = '#cccc00';
+    shotCtx.beginPath();
+    shotCtx.arc(5, 5, 5, 0, Math.PI * 2);
+    shotCtx.fill();
+    shotCanvas.refresh();
+
+    this.add.image(0, 0, 'shot');
   }
 
   private createHanabiShots() {
     const { width } = this.sys.game.canvas;
-    const firstShot = this.physics.add.sprite(width / 2, 0, 'circle_blue');
+
+    const firstShot = this.physics.add.sprite(width / 2, 0, 'shot');
     firstShot.setVelocity(0, 100);
     this.physics.add.collider(this.player, firstShot, this.gameOver.bind(this));
 
@@ -30,7 +39,7 @@ export class Level2 extends LevelBase {
         firstShot.destroy();
         const length = 16; // 4 + (3 * 4)
         for (let i=0; i<length; i++) {
-          const spark = this.physics.add.sprite(x, y, 'circle_blue');
+          const spark = this.physics.add.sprite(x, y, 'shot');
           const angle = 2 * Math.PI * (i / (length - 1));
           spark.setVelocity(Math.cos(angle) * 150, Math.sin(angle) * 150);
           this.physics.add.collider(this.player, spark, this.gameOver.bind(this));
