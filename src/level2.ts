@@ -15,13 +15,14 @@ export class Level2 extends LevelBase {
     this._preload();
     this.load.image('square', 'square10x.png');
 
-    const shotCanvas = this.textures.createCanvas('shot', 14, 14);
+    const shotCanvas = this.textures.createCanvas('shot', 10, 16);
     const shotCtx = shotCanvas.context;
-    shotCtx.fillStyle = '#ffffff';
+    shotCtx.fillStyle = '#e6eeef';
     shotCtx.beginPath();
-    shotCtx.arc(7, 7, 5, 0, Math.PI * 2);
+    shotCtx.arc(5, 9, 5, 0, Math.PI * 2);
     shotCtx.shadowBlur = 2;
     shotCtx.shadowColor = 'rgba(0, 228, 233, 1)';
+    shotCtx.shadowOffsetY = -2;
     shotCtx.fill();
     shotCanvas.refresh();
 
@@ -40,12 +41,13 @@ export class Level2 extends LevelBase {
         const { x, y } = firstShot;
         firstShot.destroy();
         const length = 16; // 4 + (3 * 4)
-        const initialSpeed = 300;
-        const sparkTTL = 2;
+        const initialSpeed = 200;
+        const sparkTTL = 3;
         for (let i=0; i<length; i++) {
           const spark = this.physics.add.sprite(x, y, 'shot');
           const angle = 2 * Math.PI * (i / (length - 1));
           spark.setVelocity(Math.cos(angle) * initialSpeed, Math.sin(angle) * initialSpeed);
+          spark.setRotation(angle - (Math.PI / 2));
           spark.setAcceleration(-Math.cos(angle) * (initialSpeed / sparkTTL), -Math.sin(angle) * (initialSpeed / sparkTTL));
           this.physics.add.collider(this.player, spark, this.gameOver.bind(this));
           this.timerEvents.push(this.time.addEvent({
