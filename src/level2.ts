@@ -15,15 +15,17 @@ export class Level2 extends LevelBase {
     this._preload();
     this.load.image('square', 'square10x.png');
 
-    const shotCanvas = this.textures.createCanvas('shot', 10, 10);
+    const shotCanvas = this.textures.createCanvas('shot', 14, 14);
     const shotCtx = shotCanvas.context;
-    shotCtx.fillStyle = '#cccc00';
+    shotCtx.fillStyle = '#ffffff';
     shotCtx.beginPath();
-    shotCtx.arc(5, 5, 5, 0, Math.PI * 2);
+    shotCtx.arc(7, 7, 5, 0, Math.PI * 2);
+    shotCtx.shadowBlur = 2;
+    shotCtx.shadowColor = 'rgba(0, 228, 233, 1)';
     shotCtx.fill();
     shotCanvas.refresh();
 
-    this.add.image(0, 0, 'shot');
+    this.load.image('shot');
   }
 
   private createHanabiShots() {
@@ -38,11 +40,28 @@ export class Level2 extends LevelBase {
         const { x, y } = firstShot;
         firstShot.destroy();
         const length = 16; // 4 + (3 * 4)
+        const initialSpeed = 300;
+        const sparkTTL = 2;
         for (let i=0; i<length; i++) {
           const spark = this.physics.add.sprite(x, y, 'shot');
           const angle = 2 * Math.PI * (i / (length - 1));
-          spark.setVelocity(Math.cos(angle) * 150, Math.sin(angle) * 150);
+          spark.setVelocity(Math.cos(angle) * initialSpeed, Math.sin(angle) * initialSpeed);
+          spark.setAcceleration(-Math.cos(angle) * (initialSpeed / sparkTTL), -Math.sin(angle) * (initialSpeed / sparkTTL));
           this.physics.add.collider(this.player, spark, this.gameOver.bind(this));
+          this.timerEvents.push(this.time.addEvent({
+            callback: () => {
+              spark.destroy();
+            },
+            delay: sparkTTL * 1000,
+            loop: false,
+          }));
+
+          this.tweens.add({
+            targets: [spark],
+            alpha: 0,
+            duration: sparkTTL * 1000,
+            ease: 'Power2',
+          });
         }
       },
       callbackScope: this,
