@@ -3,14 +3,23 @@ import { CanvasObject } from './CanvasObject';
 
 export class StraightShot implements CanvasObject {
   private _ctx: CanvasRenderingContext2D;
+  private _color: string;
   private _pos: Position;
   private _startPos: Position;
   private _endPos: Position;
   private _startTime: number;
   private _endTime: number;
 
-  public constructor(ctx: CanvasRenderingContext2D, startPos: Position, endPos: Position, startTime: number, endTime: number) {
+  public constructor(
+    ctx: CanvasRenderingContext2D,
+    color: string,
+    startPos: Position,
+    endPos: Position,
+    startTime: number,
+    endTime: number,
+  ) {
     this._ctx = ctx;
+    this._color = color;
     this._startPos = startPos;
     this._endPos = endPos;
     this._pos = {...this._startPos};
@@ -25,7 +34,7 @@ export class StraightShot implements CanvasObject {
 
     this._ctx.globalCompositeOperation = 'lighter';
 
-    this._ctx.strokeStyle = 'rgba(0, 228, 233, 1)';
+    this._ctx.strokeStyle = this._color;
     this._ctx.lineWidth = 5;
     this._ctx.beginPath();
 

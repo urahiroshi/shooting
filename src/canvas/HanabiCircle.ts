@@ -3,6 +3,7 @@ import { CanvasObject } from './CanvasObject';
 
 export class HanabiCircle implements CanvasObject {
   private _ctx: CanvasRenderingContext2D;
+  private _color: string;
   private _centerPos: Position;
   private _radius: number;
   private _startTime: number;
@@ -14,16 +15,24 @@ export class HanabiCircle implements CanvasObject {
     return Math.random() * (max - min) + min;
   }
 
-  public constructor(ctx: CanvasRenderingContext2D, centerPos: Position, radius: number, startTime: number, endTime: number) {
+  public constructor(
+    ctx: CanvasRenderingContext2D,
+    color: string,
+    centerPos: Position,
+    radius: number,
+    startTime: number,
+    endTime: number,
+  ) {
     this._radius = radius;
     this._ctx = ctx;
+    this._color = color;
     this._startTime = startTime;
     this._endTime = endTime;
     this._centerPos = centerPos;
 
     for (let i = 0; i < this._shotsCount; i++) {
       this._shots.push({
-        color: 'rgba(0, 228, 233, 1)',
+        color: this._color,
         rand: this.random(0,10),
         size: this.random(1,5),
         angle: this.random(0, 359),

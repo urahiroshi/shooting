@@ -3,6 +3,7 @@ import { LevelBase } from "./levelBase";
 import { HanabiCircle } from "./canvas/HanabiCircle";
 import { StraightShot } from "./canvas/StraightShot";
 import { CanvasObject } from "./canvas/CanvasObject";
+import { Position } from "./types";
 export class Level2 extends LevelBase {
   static KEY = 'level2';
   
@@ -26,57 +27,38 @@ export class Level2 extends LevelBase {
     this.load.image('shot');
   }
 
+  private createHanabiShot(color: string, endPos: Position, radius: number, startTime: number) {
+    this.objects.push(new StraightShot(this.ctx, color, { x: endPos.x, y: 0 }, endPos, startTime, startTime + 3000));
+    this.objects.push(new HanabiCircle(this.ctx, color, endPos, radius, startTime + 3000, startTime + 6000));
+  }
+
   private createHanabiShots() {
+    const colors = ['#0000ee', '#00ee00', '#00eeee', '#ee0000', '#ee00ee', '#eeee00'];
+    const randomColor = () => colors[Math.floor(Math.random() * 6)];
+    const randomPos = () => ({ x: Math.floor(Math.random() * 600) + 100, y: Math.floor(Math.random() * 400) + 100 });
+
     const { width, height } = this.sys.game.canvas;
 
     const canvasImage = this.add.image(width / 2, height / 2, 'shot');
     canvasImage.depth = -1000;
-    this.objects.push(new StraightShot(this.ctx, { x: width / 2, y: 0 }, { x: width / 2, y: height / 2 }, 0, 5000));
-    this.objects.push(new HanabiCircle(this.ctx, { x: width / 2, y: height / 2 }, 250, 5000, 8000));
-
-    this.objects.push(new StraightShot(this.ctx, { x: 600, y: 0 }, { x: 600, y: 400 }, 5000, 10000));
-    this.objects.push(new HanabiCircle(this.ctx, { x: 600, y: 400 }, 300, 10000, 13000));
-
-    this.objects.push(new StraightShot(this.ctx, { x: 200, y: 0 }, { x: 200, y: 200 }, 8000, 13000));
-    this.objects.push(new HanabiCircle(this.ctx, { x: 200, y: 200 }, 200, 13000, 16000));
-    // this.physics.add.sprite(width / 2, 0, 'shot');
-    // firstShot.setVelocity(0, 100);
-    // this.physics.add.collider(this.player, firstShot, this.gameOver.bind(this));
-
-    // this.timerEvents.push(this.time.addEvent({
-    //   callback: () => {
-    //     const { x, y } = firstShot;
-    //     firstShot.destroy();
-    //     const length = 16; // 4 + (3 * 4)
-    //     const initialSpeed = 200;
-    //     const sparkTTL = 3;
-    //     for (let i=0; i<length; i++) {
-    //       const spark = this.physics.add.sprite(x, y, 'shot');
-    //       const angle = 2 * Math.PI * (i / (length - 1));
-    //       spark.setVelocity(Math.cos(angle) * initialSpeed, Math.sin(angle) * initialSpeed);
-    //       spark.setRotation(angle - (Math.PI / 2));
-    //       spark.setAcceleration(-Math.cos(angle) * (initialSpeed / sparkTTL), -Math.sin(angle) * (initialSpeed / sparkTTL));
-    //       this.physics.add.collider(this.player, spark, this.gameOver.bind(this));
-    //       this.timerEvents.push(this.time.addEvent({
-    //         callback: () => {
-    //           spark.destroy();
-    //         },
-    //         delay: sparkTTL * 1000,
-    //         loop: false,
-    //       }));
-
-    //       this.tweens.add({
-    //         targets: [spark],
-    //         alpha: 0,
-    //         duration: sparkTTL * 1000,
-    //         ease: 'Power2',
-    //       });
-    //     }
-    //   },
-    //   callbackScope: this,
-    //   delay: 3000,
-    //   loop: false,
-    // }));
+    this.createHanabiShot(randomColor(), { x: 400, y: 300 }, 250, 0);
+    this.createHanabiShot(randomColor(), { x: 600, y: 400 }, 300, 3000);
+    this.createHanabiShot(randomColor(), { x: 200, y: 200 }, 200, 4000);
+    this.createHanabiShot(randomColor(), { x: 500, y: 500 }, 250, 5000);
+    this.createHanabiShot(randomColor(), { x: 400, y: 300 }, 250, 6000);
+    this.createHanabiShot(randomColor(), { x: 200, y: 300 }, 250, 7000);
+    this.createHanabiShot(randomColor(), { x: 600, y: 300 }, 250, 8000);
+    this.createHanabiShot(randomColor(), { x: 100, y: 400 }, 250, 10000);
+    this.createHanabiShot(randomColor(), { x: 400, y: 400 }, 250, 10000);
+    this.createHanabiShot(randomColor(), { x: 700, y: 400 }, 250, 10000);
+    for (let i=0; i<5; i++) {
+      this.createHanabiShot(randomColor(), randomPos(), 200, 13000 + i * 1000);
+      this.createHanabiShot(randomColor(), randomPos(), 200, 13000 + i * 1000);
+    }
+    for (let i=0; i<5; i++) {
+      this.createHanabiShot(randomColor(), randomPos(), 250, 18000 + i * 1000);
+      this.createHanabiShot(randomColor(), randomPos(), 250, 18000 + i * 1000);
+    }
   }
 
   public create() {

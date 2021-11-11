@@ -1,3 +1,3 @@
 export interface CanvasObject {
-  update(number): void;
+  update(elapsedTime: number): void;
 }
